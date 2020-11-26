@@ -1,14 +1,22 @@
-h3{
-	padding: 30px;
-}
 
-.me{
+.main-navbar{
 	background: #293691 !important;
 }
-.you{
-	color: white;
+.main-navbar .navbar-nav .active>.nav-link{
+	color: yellow;
+}
+.main-navbar .navbar-nav .nav-link {
+    color: white;
 }
 .logo{
 	height: 30px;
 	width: 50px;
+}
+
+.add-parts-section {
+	margin-top: 3rem;
+}
+
+.parts-received-section {
+	margin-top: 3rem;
 }
