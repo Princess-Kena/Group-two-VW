@@ -20,3 +20,10 @@
 .parts-received-section {
 	margin-top: 3rem;
 }
+
+.bg-image {
+	background-size: cover !important;
+	/* background-color: tomato; */
+	background-image: url('../images/background.jpg');
+	height: 100%;
+ }
