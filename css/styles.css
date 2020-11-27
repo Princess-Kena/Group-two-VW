@@ -1,6 +1,6 @@
 
 .main-navbar{
-	background: #293691 !important;
+	background:  #333 !important;
 }
 .main-navbar .navbar-nav .active>.nav-link{
 	color: yellow;
@@ -26,4 +26,13 @@
 	/* background-color: tomato; */
 	background-image: url('../images/background.jpg');
 	height: 100%;
+ }
+
+ .overlay {
+	 height: 90vh;
+	 background-color: rgba(0, 0, 0, 0.377);
+ }
+
+ .hero-text {
+	 padding-top: 8rem;
  }
