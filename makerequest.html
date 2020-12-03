@@ -28,9 +28,7 @@
         <ul class="navbar-nav ml-auto">
           <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="login.html">login</a>
-          </li>
+         
         </ul>
       </div>
     </div>
@@ -40,17 +38,17 @@
     <center>
       <h5>MAKE REQUEST</h5>
     </center>
-    <form>
+    <form onsubmit="makerequest(event)">
 
       <div class="form-row">
         <div class="form-group col-md-3"></div>
         <div class="form-group col-md-3">
           <label for="inputEmail4">Part name</label>
-          <input type="text" class="form-control" id="inputPart2">
+          <input type="text" class="form-control" id="inputPart2" name="partName">
         </div>
         <div class="form-group col-md-3">
           <label for="inputPassword4">Date</label>
-          <input type="date" class="form-control" id="inputDescrip1">
+          <input type="date" class="form-control" id="inputDescrip1" name="date">
         </div>
         <div class="form-group col-md-3"></div>
       </div>
@@ -84,7 +82,7 @@
         <div class="form-group col-md-3"></div>
         <div class="form-group col-md-6">
 
-          <a href="partsreceived.html" class="btn btn-dark rounded-pill">SAVE</a></div>
+          <button class="btn btn-dark rounded-pill">SAVE</button></div>
         <div class="form-group col-md-3"></div>
       </div>
   </div>
@@ -118,19 +116,17 @@ src="https://www.gstatic.com/firebasejs/8.1.1/firebase-firestore.js"></script>
  
 <script>
   var db = firebase.firestore();
-  function addPart(event) 
+  function makerequest(event) 
   {
         event.preventDefault();
-        db.collection('records')
+        db.collection('requestrecords')
           .add({
             partName: event.target.partName.value,
-            description: event.target.description.value,
-            batchNumber: event.target.batchNumber.value,
             date: event.target.date.value,
-            amount: event.target.amount.value,
-            addedBy: event.target.addedBy.value,
-            defects: event.target.defects.value,
             quantity: event.target.quantity.value,
+            addedBy: event.target.addedBy.value,
+            description: event.target.description.value,
+            requestedBy: event.target.requestedBy.value,
 
           })
           .then(function (docRef) {
