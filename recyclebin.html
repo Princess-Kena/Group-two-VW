@@ -36,10 +36,9 @@
   <div class="container parts-received-section">
     <div class="row">
       <div class="col text-uppercase">
-        <h5>Lists of Parts Requested</h5>
+        <h5>RECYCLE BIN</h5>
       </div>
-      <div class="col text-right">
-        <!-- <a href="addallocatedparts.html" class="btn btn-dark">ADD ALLOCATED PART</a> -->
+
       </div>
     </div>
     <br>
@@ -49,101 +48,15 @@
           <th scope="col">#</th>
           <th scope="col">Part Name</th>
           <th scope="col">Date</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Batch No.</th>
           <th scope="col">Quantity</th>
-          <th scope="col">AddedBy</th>
-          <th scope="col">Description</th>
           <th scope="col">Branch</th>
           <th scope="col">Action</th>
-
-          
-          
         </tr>
       </thead>
-      <tbody id="ListOfPartsRequested">
-        <tr>
-          <th scope="row">1</th>
-          <td>Air condition condensers</td>
-          <td>23/10/20</td>
-          <td>11</td>
-          <td>Amasaman</td>
-
-          <td>
-            <button type="button" class="btn btn-primary btn-sm">approve</button>
-            <button type="button" class="btn btn-danger btn-sm">decline</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Brakes</td>
-          <td>23/10/20</td>
-          <td>88</td>
-          <td>Labadi</td>
-
-          <td>
-            <button type="button" class="btn btn-primary btn-sm">approve</button>
-            <button type="button" class="btn btn-danger btn-sm">decline</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Airbags</td>
-          <td>23/10/20</td>
-          <td>890</td>
-          <td>Suyani</td>
-
-          <td>
-            <button type="button" class="btn btn-primary btn-sm">approve</button>
-            <button type="button" class="btn btn-danger btn-sm">decline</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">4</th>
-          <td>Seat belts</td>
-          <td>23/10/20</td>
-          <td>11</td>
-          <td>Spintex</td>
-
-          <td>
-            <button type="button" class="btn btn-primary btn-sm">approve</button>
-            <button type="button" class="btn btn-danger btn-sm">decline</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">5</th>
-          <td>Flexible foam</td>
-          <td>23/10/20</td>
-          <td>50</td>
-          <td>Prampram</td>
-
-          <td>
-            <button type="button" class="btn btn-primary btn-sm">approve</button>
-            <button type="button" class="btn btn-danger btn-sm">decline</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">6</th>
-          <td>Roof console</td>
-          <td>23/10/20</td>
-          <td>100</td>
-          <td>Adenta</td>
-
-          <td>
-            <button type="button" class="btn btn-primary btn-sm">approve</button>
-            <button type="button" class="btn btn-danger btn-sm">decline</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">7</th>
-          <td>Seat tracks</td>
-          <td>23/10/20</td>
-          <td>85</td>
-          <td>Madina</td>
-
-          <td>
-            <button type="button" class="btn btn-primary btn-sm">approve</button>
-            <button type="button" class="btn btn-danger btn-sm">decline</button>
-          </td>
-        </tr>
+      <tbody id="allDeletedParts">
+       
       </tbody>
     </table>
   </div>
@@ -178,9 +91,9 @@
  <script>
    var db = firebase.firestore();
 
-   function getAllPartsRequested() {
-            var partsTable = document.getElementById('ListOfPartsRequested');
-            db.collection("requestrecords").onSnapshot((querySnapshot) => {
+   function getAllocatedParts() {
+            var partsTable = document.getElementById('allDeletedParts');
+            db.collection("records").where('isDeleted','==',true).onSnapshot((querySnapshot) => {
               let num = 0;
               partsTable.innerHTML = '';
                 querySnapshot.forEach((doc,i) => {
@@ -192,13 +105,12 @@
                         <th scope="row">${++num}</th>
                         <td>${data.partName}</td>
                         <td>${data.date}</td>
+                        <td>${data.amount}</td>
+                        <td>${data.batchNumber}</td>
                         <td>${data.quantity}</td>
-                        <td>${data.addedBy}</td>
-                        <td>${data.description}</td>
-                        <td>${data.requestedBy}</td>
+                        <td>${data.branch}</td>
                         <td>
-                          <button type="button" class="btn btn-primary btn-sm">edit</button>
-                          <button type="button" class="btn btn-danger btn-sm" onclick="deletePart('${doc.id}')">delete</button>
+                          <button type="button" class="btn btn-danger btn-sm" onclick="restorePart('${doc.id}')">restore</button>
                         </td>
                       </tr>
                     `
@@ -207,16 +119,17 @@
             });
         }
 
-        function deletePart(id) {
-            db.collection("requestrecords").doc(id).delete().then(function () {
+        function restorePart(id) {
+            db.collection("records").doc(id).update({isDeleted:false}).then(function () {
                 console.log("Document successfully deleted!");
                 // window.location.href  =  window.location.href 
             }).catch(function (error) {
                 console.error("Error removing document: ", error);
             });
         }
-        getAllPartsRequested()
+        getAllocatedParts()
    </script>
+
 
 </body>
 
