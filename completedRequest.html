@@ -22,8 +22,20 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent you">
         <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="partsreceived.html">Parts Received</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="seeallocatedparts.html">Allocated Parts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="allunallocatedparts.html">Unallocated Parts</a>
+          </li>
           <li class="nav-item active">
-            <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="incomingrequest.html">Part Requests</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="recyclebin.html">Bin</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="index.html">Logout</a>
@@ -36,9 +48,10 @@
   <div class="container parts-received-section">
     <div class="row">
       <div class="col text-uppercase">
-        <h5>RECYCLE BIN</h5>
+        <h5>Completed Requests</h5>
       </div>
-
+      <div class="col text-right">
+        <!-- <a href="completedRequest.html" class="btn btn-link">SEE COMPLETED REQUESTS</a> -->
       </div>
     </div>
     <br>
@@ -48,14 +61,18 @@
           <th scope="col">#</th>
           <th scope="col">Part Name</th>
           <th scope="col">Date</th>
-          <th scope="col">Amount</th>
-          <th scope="col">Batch No.</th>
           <th scope="col">Quantity</th>
+          <th scope="col">RequestedBy</th>
+          <th scope="col">Phone</th>
+          <th scope="col">Email</th>
+          <th scope="col">Description</th>
           <th scope="col">Branch</th>
-          <th scope="col">Action</th>
+
+          
+          
         </tr>
       </thead>
-      <tbody id="allDeletedParts">
+      <tbody id="ListOfPartsRequested">
        
       </tbody>
     </table>
@@ -91,9 +108,9 @@
  <script>
    var db = firebase.firestore();
 
-   function getAllocatedParts() {
-            var partsTable = document.getElementById('allDeletedParts');
-            db.collection("records").where('isDeleted','==',true).onSnapshot((querySnapshot) => {
+   function getCompletedRequested() {
+            var partsTable = document.getElementById('ListOfPartsRequested');
+            db.collection("requestrecords").where('isDeleted','==',true).onSnapshot((querySnapshot) => {
               let num = 0;
               partsTable.innerHTML = '';
                 querySnapshot.forEach((doc,i) => {
@@ -105,13 +122,12 @@
                         <th scope="row">${++num}</th>
                         <td>${data.partName}</td>
                         <td>${data.date}</td>
-                        <td>${data.amount}</td>
-                        <td>${data.batchNumber}</td>
                         <td>${data.quantity}</td>
-                        <td>${data.branch}</td>
-                        <td>
-                          <button type="button" class="btn btn-danger btn-sm" onclick="restorePart('${doc.id}')">restore</button>
-                        </td>
+                        <td>${data.addedBy}</td>
+                        <td>${data.phone}</td>
+                        <td>${data.email}</td>
+                        <td>${data.description}</td>
+                        <td>${data.requestedBy}</td>
                       </tr>
                     `
                     partsTable.innerHTML = partsTable.innerHTML + newRow
@@ -119,17 +135,16 @@
             });
         }
 
-        function restorePart(id) {
-            db.collection("records").doc(id).update({isDeleted:false}).then(function () {
+        function deletePart(id) {
+            db.collection("requestrecords").doc(id).update({isDeleted:true}).then(function () {
                 console.log("Document successfully deleted!");
                 // window.location.href  =  window.location.href 
             }).catch(function (error) {
                 console.error("Error removing document: ", error);
             });
         }
-        getAllocatedParts()
+        getCompletedRequested()
    </script>
-
 
 </body>
 

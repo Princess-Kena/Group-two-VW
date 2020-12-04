@@ -22,8 +22,20 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent you">
         <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="partsreceived.html">Parts Received</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="seeallocatedparts.html">Allocated Parts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="allunallocatedparts.html">Unallocated Parts</a>
+          </li>
           <li class="nav-item active">
-            <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="incomingrequest.html">Part Requests</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="recyclebin.html">Bin</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="index.html">Logout</a>
@@ -39,7 +51,7 @@
         <h5>Lists of Parts Requested</h5>
       </div>
       <div class="col text-right">
-        <!-- <a href="addallocatedparts.html" class="btn btn-dark">ADD ALLOCATED PART</a> -->
+        <a href="completedRequest.html" class="btn btn-link">SEE COMPLETED REQUESTS</a>
       </div>
     </div>
     <br>
@@ -50,7 +62,9 @@
           <th scope="col">Part Name</th>
           <th scope="col">Date</th>
           <th scope="col">Quantity</th>
-          <th scope="col">AddedBy</th>
+          <th scope="col">RequestedBy</th>
+          <th scope="col">Phone</th>
+          <th scope="col">Email</th>
           <th scope="col">Description</th>
           <th scope="col">Branch</th>
           <th scope="col">Action</th>
@@ -60,90 +74,7 @@
         </tr>
       </thead>
       <tbody id="ListOfPartsRequested">
-        <tr>
-          <th scope="row">1</th>
-          <td>Air condition condensers</td>
-          <td>23/10/20</td>
-          <td>11</td>
-          <td>Amasaman</td>
-
-          <td>
-            <button type="button" class="btn btn-primary btn-sm">approve</button>
-            <button type="button" class="btn btn-danger btn-sm">decline</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Brakes</td>
-          <td>23/10/20</td>
-          <td>88</td>
-          <td>Labadi</td>
-
-          <td>
-            <button type="button" class="btn btn-primary btn-sm">approve</button>
-            <button type="button" class="btn btn-danger btn-sm">decline</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Airbags</td>
-          <td>23/10/20</td>
-          <td>890</td>
-          <td>Suyani</td>
-
-          <td>
-            <button type="button" class="btn btn-primary btn-sm">approve</button>
-            <button type="button" class="btn btn-danger btn-sm">decline</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">4</th>
-          <td>Seat belts</td>
-          <td>23/10/20</td>
-          <td>11</td>
-          <td>Spintex</td>
-
-          <td>
-            <button type="button" class="btn btn-primary btn-sm">approve</button>
-            <button type="button" class="btn btn-danger btn-sm">decline</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">5</th>
-          <td>Flexible foam</td>
-          <td>23/10/20</td>
-          <td>50</td>
-          <td>Prampram</td>
-
-          <td>
-            <button type="button" class="btn btn-primary btn-sm">approve</button>
-            <button type="button" class="btn btn-danger btn-sm">decline</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">6</th>
-          <td>Roof console</td>
-          <td>23/10/20</td>
-          <td>100</td>
-          <td>Adenta</td>
-
-          <td>
-            <button type="button" class="btn btn-primary btn-sm">approve</button>
-            <button type="button" class="btn btn-danger btn-sm">decline</button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">7</th>
-          <td>Seat tracks</td>
-          <td>23/10/20</td>
-          <td>85</td>
-          <td>Madina</td>
-
-          <td>
-            <button type="button" class="btn btn-primary btn-sm">approve</button>
-            <button type="button" class="btn btn-danger btn-sm">decline</button>
-          </td>
-        </tr>
+       
       </tbody>
     </table>
   </div>
@@ -180,7 +111,7 @@
 
    function getAllPartsRequested() {
             var partsTable = document.getElementById('ListOfPartsRequested');
-            db.collection("requestrecords").onSnapshot((querySnapshot) => {
+            db.collection("requestrecords").where('isDeleted','==',false).onSnapshot((querySnapshot) => {
               let num = 0;
               partsTable.innerHTML = '';
                 querySnapshot.forEach((doc,i) => {
@@ -194,11 +125,12 @@
                         <td>${data.date}</td>
                         <td>${data.quantity}</td>
                         <td>${data.addedBy}</td>
+                        <td>${data.phone}</td>
+                        <td>${data.email}</td>
                         <td>${data.description}</td>
                         <td>${data.requestedBy}</td>
                         <td>
-                          <button type="button" class="btn btn-primary btn-sm">edit</button>
-                          <button type="button" class="btn btn-danger btn-sm" onclick="deletePart('${doc.id}')">delete</button>
+                          <button type="button" class="btn btn-primary btn-sm" onclick="deletePart('${doc.id}')">Completed</button>
                         </td>
                       </tr>
                     `
@@ -208,7 +140,7 @@
         }
 
         function deletePart(id) {
-            db.collection("requestrecords").doc(id).delete().then(function () {
+            db.collection("requestrecords").doc(id).update({isDeleted:true}).then(function () {
                 console.log("Document successfully deleted!");
                 // window.location.href  =  window.location.href 
             }).catch(function (error) {

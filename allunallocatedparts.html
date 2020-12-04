@@ -22,8 +22,20 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent you">
         <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="partsreceived.html">Parts Received</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="seeallocatedparts.html">Allocated Parts</a>
+          </li>
           <li class="nav-item active">
-            <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="allunallocatedparts.html">Unallocated Parts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="incomingrequest.html">Part Requests</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="recyclebin.html">Bin</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="index.html">Logout</a>
@@ -39,8 +51,8 @@
         <h5>Unallocated Parts</h5>
       </div>
       <div class="col text-right">
-        <a href="seeallocatedparts.html" class="btn btn-link">SEE ALLOCATED PARTS</a>
-        <a href="incomingrequest.html" class="btn btn-link">SEE REQUESTED PARTS</a>
+        <!-- <a href="seeallocatedparts.html" class="btn btn-link">SEE ALLOCATED PARTS</a>
+        <a href="incomingrequest.html" class="btn btn-link">SEE REQUESTED PARTS</a> -->
 
       </div>
     </div>
@@ -54,11 +66,10 @@
           <th scope="col">Amount</th>
           <th scope="col">Batch No.</th>
           <th scope="col">Quantity</th>
-          <th scope="col">Branch</th>
           <th scope="col">Action</th>
         </tr>
       </thead>
-      <tbody id="addUnallocatedParts ">
+      <tbody id="UnallocatedParts">
         
       </tbody>
     </table>
@@ -94,9 +105,10 @@
  <script>
    var db = firebase.firestore();
 
-   function getAllocatedParts() {
-            var partsTable = document.getElementById('allAllocatedParts');
-            db.collection("allocatedrecords").onSnapshot((querySnapshot) => {
+   function getUnallocatedParts() {
+            var partsTable = document.getElementById('UnallocatedParts');
+            db.collection("records").where('isDeleted','==',false).where('branch','==','').onSnapshot((querySnapshot) => {
+              console.log('f');
               let num = 0;
               partsTable.innerHTML = '';
                 querySnapshot.forEach((doc,i) => {
@@ -111,12 +123,90 @@
                         <td>${data.amount}</td>
                         <td>${data.batchNumber}</td>
                         <td>${data.quantity}</td>
-                        <td>${data.branch}</td>
                         <td>
                           <button type="button" class="btn btn-primary btn-sm">edit</button>
                           <button type="button" class="btn btn-danger btn-sm" onclick="deletePart('${doc.id}')">delete</button>
                         </td>
                       </tr>
+                      <div class="modal fade" id="editModal${num++}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Edit Part</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form onsubmit="editPart(event,'${doc.id}')">
+
+                                  <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                      <label for="inputEmail4">Part name</label>
+                                      <input type="text" class="form-control" id="inputPart2" value="${data.partName}" name="partName" >
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                      <label for="inputPassword4">Description</label>
+                                      <input type="text" class="form-control" value="${data.description}" id="inputDescrip1"  name="description">
+                                    </div>
+                                  </div>
+                            
+                                  <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                      <label for="inputEmail4">Batch number</label>
+                                      <input type="number" class="form-control" value="${data.batchNumber}" id="inputBatchNo2"  name="batchNumber">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                      <label for="inputPassword4">Date </label>
+                                      <input type="date" class="form-control" value="${data.date}" id="inputDate2"  name="date">
+                                    </div>
+                                  </div>
+                                  <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                      <label for="inputEmail4">Amount</label>
+                                      <input type="number" value="${data.amount}" class="form-control" id="inputAmount2" name="amount">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                      <label for="inputPassword4">Added by</label>
+                                      <input type="text" class="form-control" id="inputAdded2" value="${data.addedBy}"  name="addedBy">
+                                    </div>
+                                  </div>
+                                  <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                      <label for="inputEmail4">Defects</label>
+                                      <input type="text" class="form-control" id="inputDefects2" value="${data.defects}" name="defects">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                      <label for="inputPassword4">Quantity</label>
+                                      <input type="text" class="form-control" id="inputQuantity1" value="${data.quantity}"  name="quantity">
+                                    </div>
+                                  </div>
+
+                                  <div class="form-row">
+                                    <div class="form-group">
+                                      <label for="inputEmail4">Location</label>
+                                      <input type="text" class="form-control" id="location" value="${data.branch?data.branch:''}" name="branch">
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="form-group col-md-6">
+                            
+                                      <button class="btn btn-dark rounded-pill" type="submit">SAVE</button>
+                                    </div>
+                                  </div>
+                              </div>
+                              </form>
+                            
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+
                     `
                     partsTable.innerHTML = partsTable.innerHTML + newRow
                 });
@@ -131,7 +221,7 @@
                 console.error("Error removing document: ", error);
             });
         }
-        getAllocatedParts()
+        getUnallocatedParts()
    </script>
 
 

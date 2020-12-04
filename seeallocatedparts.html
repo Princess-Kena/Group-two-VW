@@ -22,8 +22,20 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent you">
         <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="partsreceived.html">Parts Received</a>
+          </li>
           <li class="nav-item active">
-            <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="seeallocatedparts.html">Allocated Parts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="allunallocatedparts.html">Unallocated Parts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="incomingrequest.html">Part Requests</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="recyclebin.html">Bin</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="index.html">Logout</a>
@@ -39,8 +51,8 @@
         <h5>Allocated Parts</h5>
       </div>
       <div class="col text-right">
-        <a href="allunallocatedparts.html" class="btn btn-link">SEE UNALLOCATED PART</a>
-        <a href="addallocatedparts.html" class="btn btn-dark">ADD ALLOCATED PART</a>
+        <!-- <a href="allunallocatedparts.html" class="btn btn-link">SEE UNALLOCATED PART</a>
+        <a href="addallocatedparts.html" class="btn btn-dark">ADD ALLOCATED PART</a> -->
 
       </div>
     </div>
@@ -62,90 +74,6 @@
        
       </tbody>
     </table>
-       <!-- Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit Part</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form onsubmit="addPart(event)">
-
-          <div class="form-row">
-            <div class="form-group col-md-3"></div>
-            <div class="form-group col-md-3">
-              <label for="inputEmail4">Part name</label>
-              <input type="text" class="form-control" id="inputPart2" name="partName" >
-            </div>
-            <div class="form-group col-md-3">
-              <label for="inputPassword4">Description</label>
-              <input type="text" class="form-control" id="inputDescrip1"  name="description">
-            </div>
-            <div class="form-group col-md-3"></div>
-          </div>
-    
-          <div class="form-row">
-            <div class="form-group col-md-3"></div>
-            <div class="form-group col-md-3">
-              <label for="inputEmail4">Batch number</label>
-              <input type="number" class="form-control" id="inputBatchNo2"  name="batchNumber">
-            </div>
-            <div class="form-group col-md-3">
-              <label for="inputPassword4">Date </label>
-              <input type="date" class="form-control" id="inputDate2"  name="date">
-            </div>
-            <div class="form-group col-md-3"></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group col-md-3"></div>
-            <div class="form-group col-md-3">
-              <label for="inputEmail4">Amount</label>
-              <input type="number" class="form-control" id="inputAmount2" name="amount">
-            </div>
-            <div class="form-group col-md-3">
-              <label for="inputPassword4">Added by</label>
-              <input type="text" class="form-control" id="inputAdded2"  name="addedBy">
-            </div>
-            <div class="form-group col-md-3"></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group col-md-3"></div>
-            <div class="form-group col-md-3">
-              <label for="inputEmail4">Defects</label>
-              <input type="text" class="form-control" id="inputDefects2"  name="defects">
-            </div>
-            <div class="form-group col-md-3">
-              <label for="inputPassword4">Quantity</label>
-              <input type="text" class="form-control" id="inputQuantity1"   name="quantity">
-            </div>
-            <div class="form-group col-md-3"></div>
-          </div>
-          <div class="row">
-            <div class="form-group col-md-3"></div>
-            <div class="form-group col-md-6">
-    
-              <button class="btn btn-dark rounded-pill" type="submit">SAVE</button>
-            </div>
-            <div class="form-group col-md-3"></div>
-          </div>
-      </div>
-      </form>
-    
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-  </div>
-
-
 
   </div>
 
@@ -181,28 +109,108 @@
 
    function getAllocatedParts() {
             var partsTable = document.getElementById('allPartsAllocated');
-            db.collection("allocatedrecords").onSnapshot((querySnapshot) => {
+            db.collection("records").where('isDeleted','==',false).where('branch','!=','').onSnapshot((querySnapshot) => {
               let num = 0;
               partsTable.innerHTML = '';
                 querySnapshot.forEach((doc,i) => {
                     // console.log(`${doc.id} => ${doc.data().projectName}`);
                     let data = doc.data();
                     console.log(data);
-                    let newRow = `
-                    <tr>
-                        <th scope="row">${++num}</th>
+                    let newRow = `                    <tr>
+                        <th scope="row">${num}</th>
                         <td>${data.partName}</td>
                         <td>${data.date}</td>
                         <td>${data.amount}</td>
                         <td>${data.batchNumber}</td>
                         <td>${data.quantity}</td>
                         <td>${data.branch}</td>
+                        
+
                         <td>
-                          <button type="button" class="btn btn-primary btn-sm">edit</button>
+                          <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editModal${num}">edit</button>
                           <button type="button" class="btn btn-danger btn-sm" onclick="deletePart('${doc.id}')">delete</button>
+
+                          <div class="modal fade" id="editModal${num++}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Edit Part</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form onsubmit="editPart(event,'${doc.id}')">
+
+                                  <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                      <label for="inputEmail4">Part name</label>
+                                      <input type="text" class="form-control" id="inputPart2" value="${data.partName}" name="partName" >
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                      <label for="inputPassword4">Description</label>
+                                      <input type="text" class="form-control" value="${data.description}" id="inputDescrip1"  name="description">
+                                    </div>
+                                  </div>
+                            
+                                  <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                      <label for="inputEmail4">Batch number</label>
+                                      <input type="number" class="form-control" value="${data.batchNumber}" id="inputBatchNo2"  name="batchNumber">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                      <label for="inputPassword4">Date </label>
+                                      <input type="date" class="form-control" value="${data.date}" id="inputDate2"  name="date">
+                                    </div>
+                                  </div>
+                                  <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                      <label for="inputEmail4">Amount</label>
+                                      <input type="number" value="${data.amount}" class="form-control" id="inputAmount2" name="amount">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                      <label for="inputPassword4">Added by</label>
+                                      <input type="text" class="form-control" id="inputAdded2" value="${data.addedBy}"  name="addedBy">
+                                    </div>
+                                  </div>
+                                  <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                      <label for="inputEmail4">Defects</label>
+                                      <input type="text" class="form-control" id="inputDefects2" value="${data.defects}" name="defects">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                      <label for="inputPassword4">Quantity</label>
+                                      <input type="text" class="form-control" id="inputQuantity1" value="${data.quantity}"  name="quantity">
+                                    </div>
+                                  </div>
+
+                                  <div class="form-row">
+                                    <div class="form-group">
+                                      <label for="inputEmail4">Location</label>
+                                      <input type="text" class="form-control" id="location" value="${data.branch?data.branch:''}" name="branch">
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="form-group col-md-6">
+                            
+                                      <button class="btn btn-dark rounded-pill" type="submit">SAVE</button>
+                                    </div>
+                                  </div>
+                              </div>
+                              </form>
+                            
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                              </div>
+                            </div>
+                          </div>
                         </td>
                       </tr>
                     `
+
+                    
                     partsTable.innerHTML = partsTable.innerHTML + newRow
                 });
             });
