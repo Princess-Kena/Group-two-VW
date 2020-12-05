@@ -33,9 +33,9 @@
     </div>
   </nav>
 
-  <div class="container parts-received-section">
+  <div class="container activities-log-section">
     <div class="row">
-      <div class="col text-uppercase">
+      <div class="col text-uppercase"style="margin-top: 30px;">
         <h5>ACTIVITIES LOG</h5>
       </div>
 
@@ -54,10 +54,36 @@
           <th scope="col">Batch No.</th>
           <th scope="col">Quantity</th>
           <th scope="col">Branch</th>
-          <th scope="col">Action by</th>
+          <th scope="col">User</th>
+
         </tr>
       </thead>
-      <tbody id="allPartsAllocated">
+      <tbody id="avtivitiesLog">
+        <tr>
+            <th scope="row">1</th>
+            <td>Restored</td>
+            <td>Mirror</td>
+            <td>02-03-20</td>
+            <td>08:40pm</td>
+            <td>50</td>
+            <td>657486</td>
+            <td>67</td>
+            <td>Labadi</td>
+            <td>Sena Jones</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Deleted</td>
+            <td>Engine</td>
+            <td>03-03-20</td>
+            <td>08:40pm</td>
+            <td>50</td>
+            <td>657486</td>
+            <td>67</td>
+            <td>Labadi</td>
+            <td>Sena Jones</td>
+          </tr>
+
        
       </tbody>
     </table>
@@ -94,7 +120,7 @@
    var db = firebase.firestore();
 
    function getAllocatedParts() {
-            var partsTable = document.getElementById('allPartsAllocated');
+            var partsTable = document.getElementById('activitiesLog');
             db.collection("allocatedrecords").onSnapshot((querySnapshot) => {
               let num = 0;
               partsTable.innerHTML = '';
@@ -113,7 +139,7 @@
                         <td>${data.batchNumber}</td>
                         <td>${data.quantity}</td>
                         <td>${data.branch}</td>
-                        <td>${data.actionBy}</td>
+                        <td>${data.user}</td>
                       </tr>
                     `
                     partsTable.innerHTML = partsTable.innerHTML + newRow
@@ -129,7 +155,7 @@
                 console.error("Error removing document: ", error);
             });
         }
-        getAllocatedParts()
+        // getAllocatedParts()
    </script>
 
 
